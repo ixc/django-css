@@ -19,7 +19,7 @@ class BaseTestCase(TestCase):
     
     def setUp(self):
         self.old_settings = copy(settings.__dict__)
-        self.TEST_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "testing")
+        self.TEST_DIR = os.path.realpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "testing"))
         settings.MEDIA_ROOT = os.path.join(self.TEST_DIR, 'media')
         settings.MEDIA_URL = '/media/'
         settings.COMPRESS_CSS_FILTERS = ['compressor.filters.css_default.CssAbsoluteFilter']
