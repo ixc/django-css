@@ -134,6 +134,11 @@ If this seems a little hacky, it's because I wanted to make it easy to use whate
   converted to absolute URLs while being processed. Any local absolute urls (those
   starting with a '/') are left alone.
 
+``COMPRESS_CACHE_BACKEND`` default: ``CACHE_BACKEND``
+  The backend to use for caching, in case you want to use a different cache
+  backend for compressor. Defaults to the ``CACHE_BACKEND`` setting.
+
+
 
 Notes
 *****

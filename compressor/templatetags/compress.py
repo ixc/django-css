@@ -1,5 +1,4 @@
 from django import template
-from django.core.cache import cache
 
 try:
     from django.contrib.sites.models import Site
@@ -8,6 +7,7 @@ except:
     DOMAIN = ''
     
 from compressor import CssCompressor, JsCompressor
+from compressor.cache import cache
 from compressor.conf import settings
 from time import sleep
 

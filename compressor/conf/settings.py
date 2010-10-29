@@ -14,3 +14,5 @@ COMPILER_FORMATS = getattr(settings, 'COMPILER_FORMATS', {})
 
 if ABSOLUTE_CSS_URLS and 'compressor.filters.css_default.CssAbsoluteFilter' not in COMPRESS_CSS_FILTERS:
     COMPRESS_CSS_FILTERS.insert(0, 'compressor.filters.css_default.CssAbsoluteFilter')
+
+CACHE_BACKEND = getattr(settings, 'COMPRESS_CACHE_BACKEND', settings.CACHE_BACKEND)

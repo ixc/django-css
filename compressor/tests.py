@@ -10,6 +10,7 @@ from django.test import TestCase
 from compressor import CssCompressor, JsCompressor, UncompressableFileError
 from compressor.conf import settings
 from compressor.utils import get_file_hash
+from django.core.cache.backends import dummy
 
 class BaseTestCase(TestCase):
     
@@ -31,6 +32,7 @@ class BaseTestCase(TestCase):
                 'arguments': '*.ccss'
             },
         }
+        settings.CACHE_BACKEND = "dummy://"
         
 
 class CompressorTestCase(BaseTestCase):
@@ -254,3 +256,8 @@ class TemplatetagTestCase(BaseTestCase):
         out = u'<script type="text/javascript" src="/media/CACHE/js/3f33b9146e12.js"></script>'
         self.assertEqual(out, self.render(template, context))
 
+
+class CacheBackendTestCase(BaseTestCase):
+    def test_correct_backend(self):
+        from compressor.cache import cache
+        self.assertEqual(cache.__class__, dummy.CacheClass)
