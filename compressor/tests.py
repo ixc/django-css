@@ -4,7 +4,9 @@ from copy import copy
 from textwrap import dedent
 from BeautifulSoup import BeautifulSoup
 
-from django.template import Template, Context
+from django.conf import settings as djangosettings
+from django.template import Template, Context, loader
+from django.template.loaders import app_directories
 from django.test import TestCase
 
 from compressor import CssCompressor, JsCompressor, UncompressableFileError
@@ -17,6 +19,10 @@ class BaseTestCase(TestCase):
     def tearDown(self):
         for k, v in self.old_settings.iteritems():
             setattr(settings, k, v)
+        djangosettings.TEMPLATE_LOADERS = self._old_TEMPLATE_LOADERS
+        # Refresh template cache
+        reload(app_directories)
+        loader.template_source_loaders = None
     
     def setUp(self):
         self.old_settings = copy(settings.__dict__)
@@ -33,6 +39,18 @@ class BaseTestCase(TestCase):
             },
         }
         settings.CACHE_BACKEND = "dummy://"
+        # Remove filesystem loader from template loaders so that overridden
+        # "css.html" templates don't interfere with the tests.
+        self._old_TEMPLATE_LOADERS = djangosettings.TEMPLATE_LOADERS
+        loaders = list(djangosettings.TEMPLATE_LOADERS)
+        try:
+            loaders.remove('django.template.loaders.filesystem.Loader')
+            djangosettings.TEMPLATE_LOADERS = loaders
+        except ValueError:
+            pass
+        # Refresh template cache
+        reload(app_directories)
+        loader.template_source_loaders = None
         
 
 class CompressorTestCase(BaseTestCase):
