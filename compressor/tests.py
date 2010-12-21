@@ -277,5 +277,6 @@ class TemplatetagTestCase(BaseTestCase):
 
 class CacheBackendTestCase(BaseTestCase):
     def test_correct_backend(self):
-        from compressor.cache import cache
-        self.assertEqual(cache.__class__, dummy.CacheClass)
+        from compressor import cache
+        reload(cache)
+        self.assertEqual(cache.cache.__class__, dummy.CacheClass)
