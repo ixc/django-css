@@ -8,7 +8,7 @@ def get_hexdigest(plaintext):
     return sha_constructor(p).hexdigest()
 
 def get_file_hash(filename):
-    media_root = os.path.abspath(settings.MEDIA_ROOT)
+    media_root = os.path.realpath(settings.MEDIA_ROOT)
     if not filename.startswith(media_root):
         filename = os.path.join(media_root, filename)
     try:
@@ -16,4 +16,3 @@ def get_file_hash(filename):
         return get_hexdigest(str(int(mtime)))[:12]
     except OSError:
         return None
-    
