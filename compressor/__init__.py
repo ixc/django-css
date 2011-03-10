@@ -196,6 +196,10 @@ class CssCompressor(Compressor):
             bin = compiler['binary_path']
         except:
             raise Exception("Path to CSS compiler must be included in COMPILER_FORMATS")
+        if os.name == 'posix' and ' ' in filename:
+            filename = re.sub(r'(?<!\\) ', r'\ ', filename)
+        elif os.name == 'nt' and ' ' in filename and not filename.startswith('"'):
+            filename = '"%s"' % filename
         arguments = compiler.get('arguments','').replace("*",filename)
         command = '%s %s' % (bin, arguments)
         p = subprocess.Popen(command,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
