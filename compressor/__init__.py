@@ -62,10 +62,16 @@ class Compressor(object):
         raise NotImplementedError('split_contents must be defined in a subclass')
 
     def get_filename(self, url):
-        if not url.startswith(self.media_url):
-            raise UncompressableFileError('"%s" is not in COMPRESS_URL ("%s") and can not be compressed' % (url, self.media_url))
-        basename = url[len(self.media_url):]
-        filename = os.path.join(settings.MEDIA_ROOT, basename)
+
+        if url.startswith(self.media_url):
+            basename = url[len(self.media_url):]
+            filename = os.path.join(settings.MEDIA_ROOT, basename)
+        elif url.startswith(django_settings.STATIC_URL):
+            basename = url[len(django_settings.STATIC_URL):]
+            filename = os.path.join(django_settings.STATIC_ROOT, basename)
+        else:
+            raise UncompressableFileError('"%s" is not in COMPRESS_URL ("%s") or " + \
+            "STATIC_URL ("%s") and can not be compressed' % (url, self.media_url, django_settings.STATIC_URL))
         return filename
 
     @property
